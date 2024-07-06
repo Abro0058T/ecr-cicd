@@ -38,30 +38,40 @@ jobs:
              run: |
                docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
                docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
     deploy:
-        runs-on: ubuntu-latest
-        # if: ${{github.ref=='refs/heads/main'}}
-        needs: [build]
-        steps:
-          - name: Checkout code
-            uses: actions/checkout@v4
-          - name: copy file via ssh key
-            uses: appleboy/scp-action@v0.1.4
-            with:
-              host: ${{secrets.HOST}}
-              username: ${{secrets.USERNAME}}
-              key: ${{secrets.KEY}}
-              source: "Dockerfile"
-              target: .
-          - name: run docker-compose
-            uses: appleboy/ssh-action@v1.0.0
-            with:
-              host: ${{secrets.HOST}}
-              username: ${{secrets.USERNAME}}
-              key: ${{secrets.KEY}}
-              script: |
-                docker compose down
-                docker rmi -f $(docker images -q)
-                docker compose pull
-                docker compose up -d
+       runs-on: ubuntu-latest
+      #  if: ${{ github.ref == 'refs/heads/main' }}
+       needs: [build]
+       steps:
+         - name: Checkout code
+           uses: actions/checkout@v4
+         - name: Configure AWS credentials
+           uses: aws-actions/configure-aws-credentials@v1
+           with:
+             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+             aws-region: us-east-1
+         - name: Login to Amazon ECR
+           id: login-ecr
+           uses: aws-actions/amazon-ecr-login@v1
+         - name: copy file via ssh key
+           uses: appleboy/scp-action@v0.1.7
+           with:
+             host: ${{ secrets.HOST }}
+             username: ${{ secrets.USERNAME }}
+             key: ${{ secrets.KEY }}
+             source: "Dockerfile"
+             target: .
+         - name: run docker-build
+           uses: appleboy/ssh-action@v1.0.0
+           with:
+             host: ${{ secrets.HOST }}
+             username: ${{ secrets.USERNA,E }}
+             key: ${{ secrets.KEY }}
+             script: |
+               aws ecr get-login-password | sudo docker login -u AWS --password-stdin "https://$(aws sts get-caller-identity --query 'Account' --output text).dkr.ecr.eu-north-1.amazonaws.com"
+               sudo docker-compose down
+               sudo docker-compose down --remove-orphans
+               sudo docker rmi -f $(sudo docker images -q)
+               sudo docker-compose pull
+               sudo docker-compose up -d
