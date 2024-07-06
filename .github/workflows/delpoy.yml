@@ -49,8 +49,8 @@ jobs:
           - name: copy file via ssh key
             uses: appleboy/scp-action@v0.1.4
             with:
-              host: ${{secreta.HOST}}
-              username: ${{secreta.USERNAME}}
+              host: ${{secrets.HOST}}
+              username: ${{secrets.USERNAME}}
               key: ${{secrets.KEY}}
               source: "Dockerfile"
               target: .
