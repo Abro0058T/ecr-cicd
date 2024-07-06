@@ -47,7 +47,7 @@ jobs:
           - name: Checkout code
             uses: actions/checkout@v4
           - name: copy file via ssh key
-            user: appleboy/scp-action@v0.1.4
+            uses: appleboy/scp-action@v0.1.4
             with:
               host: ${{secreta.HOST}}
               username: ${{secreta.USERNAME}}
