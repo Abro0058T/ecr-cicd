@@ -13,17 +13,15 @@ jobs:
        runs-on: ubuntu-latest
        
        steps:
-           - name : Check variables 
-             run: echo $AWS_REGION  $vars.AWS_REGION ${{vars.AWS_REGION}}
            - name: Check out code
              uses: actions/checkout@v2 # deploy.yml
 
            - name: Configure AWS credentials
              uses: aws-actions/configure-aws-credentials@v1
              with:
-                   aws-access-key-id: $
-                   aws-secret-access-key: $
-                   aws-region: $
+                   aws-access-key-id: ${{vars.AWS_ACCESS_KEY_ID}}
+                   aws-secret-access-key: ${{vars.AWS_SECRET_ACCESS_KEY}}
+                   aws-region:  ${{vars.AWS_REGION}}
            
            # deploy.yml
            - name: Login to Amazon ECR
