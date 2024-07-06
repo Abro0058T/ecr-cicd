@@ -78,5 +78,5 @@ jobs:
                aws ecr get-login-password | sudo docker login -u AWS --password-stdin "https://$(aws sts get-caller-identity --query 'Account' --output text).dkr.ecr.eu-north-1.amazonaws.com"
                sudo docker rm -v -f $(docker ps -qa)
                sudo docker rmi -f $(docker images -aq)
-               sudo docker run $(aws sts get-caller-identity --query 'Account' --output text).dkr.ecr.eu-north-1.amazonaws.com/ecr_cicd_repo:${needs.build.outputs.image_tag}
+               sudo docker run $(aws sts get-caller-identity --query 'Account' --output text).dkr.ecr.eu-north-1.amazonaws.com/ecr_cicd_repo:${{needs.build.outputs.image_tag}}
                
