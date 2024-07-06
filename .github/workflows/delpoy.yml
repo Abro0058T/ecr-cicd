@@ -39,29 +39,29 @@ jobs:
                docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
                docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-deploy:
-    runs-on: ubuntu-latest
-    if: ${{github.ref=='refs/heads/main'}}
-    needs: build
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: copy file via ssh key
-        user: appleboy/scp-action@v0.1.4
-        with:
-          host: ${{secreta.HOST}}
-          username: ${{secreta.USERNAME}}
-          key: ${{secrets.KEY}}
-          source: "Dockerfile"
-          target: .
-      - name: run docker-compose
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{secrets.HOST}}
-          username: ${{secrets.USERNAME}}
-          key: ${{secrets.KEY}}
-          script: |
-            docker compose down
-            docker rmi -f $(docker images -q)
-            docker compose pull
-            docker compose up -d
+    deploy:
+        runs-on: ubuntu-latest
+        if: ${{github.ref=='refs/heads/main'}}
+        needs: build
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v4
+          - name: copy file via ssh key
+            user: appleboy/scp-action@v0.1.4
+            with:
+              host: ${{secreta.HOST}}
+              username: ${{secreta.USERNAME}}
+              key: ${{secrets.KEY}}
+              source: "Dockerfile"
+              target: .
+          - name: run docker-compose
+            uses: appleboy/ssh-action@v1.0.0
+            with:
+              host: ${{secrets.HOST}}
+              username: ${{secrets.USERNAME}}
+              key: ${{secrets.KEY}}
+              script: |
+                docker compose down
+                docker rmi -f $(docker images -q)
+                docker compose pull
+                docker compose up -d
