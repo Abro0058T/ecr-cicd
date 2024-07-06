@@ -66,7 +66,7 @@ jobs:
            uses: appleboy/ssh-action@v1.0.0
            with:
              host: ${{ secrets.HOST }}
-             username: ${{ secrets.USERNA,E }}
+             username: ${{ secrets.USERNAME }}
              key: ${{ secrets.KEY }}
              script: |
                aws ecr get-login-password | sudo docker login -u AWS --password-stdin "https://$(aws sts get-caller-identity --query 'Account' --output text).dkr.ecr.eu-north-1.amazonaws.com"
