@@ -60,14 +60,14 @@ jobs:
          - name: Login to Amazon ECR
            id: login-ecr
            uses: aws-actions/amazon-ecr-login@v1
-         # - name: copy file via ssh key
-         #   uses: appleboy/scp-action@v0.1.7
-         #   with:
-         #     host: ${{ secrets.HOST }}
-         #     username: ${{ secrets.USERNAME }}
-         #     key: ${{ secrets.KEY }}
-         #     source: "Dockerfile"
-         #     target: .
+         - name: copy file via ssh key
+           uses: appleboy/scp-action@v0.1.7
+           with:
+             host: ${{ secrets.HOST }}
+             username: ${{ secrets.USERNAME }}
+             key: ${{ secrets.KEY }}
+             source: "Dockerfile"
+             target: .
          - name: run docker-build
            uses: appleboy/ssh-action@v1.0.0
            with:
