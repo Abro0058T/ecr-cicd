@@ -50,7 +50,7 @@ jobs:
             uses: appleboy/scp-action@v0.1.4
             with:
               host: ${{secrets.HOST}}
-              username: ${{secreta.USERNAME}}
+              username: ${{secrets.USERNAME}}
               key: ${{secrets.KEY}}
               source: "Dockerfile"
               target: .
